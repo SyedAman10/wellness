@@ -119,8 +119,7 @@ export default function Home() {
 
           <p className="sub reveal">
             Our full website will be live shortly. Be the first to know when we launch.
-            Join our list now — and if you&apos;re among the <strong>first 100</strong> to sign up,
-            you&apos;ll unlock an exclusive offer the moment we go live.
+            Join our list now — and if you&apos;re among the <strong>first 100</strong>{" "}to sign up, you&apos;ll unlock an exclusive offer the moment we go live.
           </p>
 
           <div className="capture reveal">
