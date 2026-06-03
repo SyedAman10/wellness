@@ -13,7 +13,7 @@ export default function Home() {
   const clearError = useCallback(() => setError(null), []);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
       const value = email.trim();
 
@@ -27,15 +27,38 @@ export default function Home() {
       }
 
       setError(null);
-      const form = formRef.current;
-      if (form) {
-        form.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-        form.style.opacity = "0";
-        form.style.transform = "translateY(-6px)";
-        form.style.pointerEvents = "none";
-      }
 
-      setTimeout(() => setSubmitted(true), 380);
+      try {
+        const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: value }),
+        });
+
+        if (res.status === 409) {
+          alert("You’re already on the list!");
+          return;
+        }
+
+        if (!res.ok) {
+          setError("Something went wrong. Please try again.");
+          return;
+        }
+
+        alert("You’re on the list! We’ll reach out when we launch.");
+
+        const form = formRef.current;
+        if (form) {
+          form.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+          form.style.opacity = "0";
+          form.style.transform = "translateY(-6px)";
+          form.style.pointerEvents = "none";
+        }
+
+        setTimeout(() => setSubmitted(true), 380);
+      } catch {
+        setError("Network error. Please try again.");
+      }
     },
     [email]
   );
