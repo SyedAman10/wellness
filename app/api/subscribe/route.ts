@@ -24,8 +24,8 @@ export async function POST(req: NextRequest) {
         },
         body: JSON.stringify({
           fields: {
-            Email: email,
-            Date: new Date().toISOString(),
+            "Email Address": email,
+            "Submission Timestamp": new Date().toISOString(),
           },
         }),
       }
