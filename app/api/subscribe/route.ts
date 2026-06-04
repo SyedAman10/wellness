@@ -1,17 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync, writeFileSync, existsSync } from "fs";
-import { join } from "path";
-
-const DB_PATH = join(process.cwd(), "subscribers.json");
-
-function readSubscribers(): string[] {
-  if (!existsSync(DB_PATH)) return [];
-  try {
-    return JSON.parse(readFileSync(DB_PATH, "utf-8"));
-  } catch {
-    return [];
-  }
-}
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
@@ -20,14 +7,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
-  const subscribers = readSubscribers();
+  const response = await fetch(
+    `https://api.airtable.com/v0/appzgQAMezE0a20Gl/Aya%20Email`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fields: {
+          Email: email,
+          Date: new Date().toISOString(),
+        },
+      }),
+    }
+  );
 
-  if (subscribers.includes(email)) {
-    return NextResponse.json({ error: "Already subscribed" }, { status: 409 });
+  if (!response.ok) {
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
-
-  subscribers.push(email);
-  writeFileSync(DB_PATH, JSON.stringify(subscribers, null, 2));
 
   return NextResponse.json({ success: true });
 }
