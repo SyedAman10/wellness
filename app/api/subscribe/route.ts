@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const response = await fetch(
-      `https://api.airtable.com/v0/appzgQAMezE0a20Gl/Aya%20Email`,
+      `https://api.airtable.com/v0/appzgQAMezE0a20Gl/Email%20Submissions`,
       {
         method: "POST",
         headers: {
