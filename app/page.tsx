@@ -36,7 +36,7 @@ export default function Home() {
         });
 
         if (res.status === 409) {
-          alert("You’re already on the list!");
+          setError("You’re already on the list.");
           return;
         }
 
@@ -44,8 +44,6 @@ export default function Home() {
           setError("Something went wrong. Please try again.");
           return;
         }
-
-        alert("You’re on the list! We’ll reach out when we launch.");
 
         const form = formRef.current;
         if (form) {
